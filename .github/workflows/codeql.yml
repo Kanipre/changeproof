@@ -23,6 +23,7 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@24c7eb380a2dc368f2d129e4c65e51d172983a1e # v4
         with:
+          config-file: ./.github/codeql/codeql-config.yml
           languages: javascript-typescript
 
       - name: Analyze

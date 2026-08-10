@@ -31,6 +31,18 @@ Review in this order:
 Use conventional review states: approve only when merge-ready, comment for
 non-blocking suggestions, and request changes for correctness or safety issues.
 
+## Security scanning
+
+CodeQL scans the authored source and excludes generated `dist/` and
+`action-dist/` bundles. Those bundles repeat the source plus vendored dependency
+code, so scanning them creates duplicate or protocol-level findings that cannot
+be fixed in ChangeProof. Dependency Review and `npm audit` remain responsible
+for dependency risk.
+
+Investigate every alert against its source before closing it. For example, the
+WebSocket handshake SHA-1 operation bundled from Undici is required by RFC 6455
+and does not rely on SHA-1's cryptographic security properties.
+
 ## Release checklist
 
 1. Ensure `main` is green and the dependency audit reports zero known issues.
