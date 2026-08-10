@@ -1,0 +1,34 @@
+version: 1
+
+policies:
+  - id: packages-need-tests
+    description: Every package change needs test evidence somewhere in the PR.
+    when:
+      changed:
+        - "packages/*/src/**"
+    require:
+      any:
+        - "packages/*/test/**"
+        - "packages/*/**/*.test.*"
+    severity: error
+
+  - id: api-needs-changeset
+    description: Public package changes require a release note.
+    when:
+      changed:
+        - "packages/*/src/index.*"
+    require:
+      any:
+        - ".changeset/*.md"
+    severity: error
+
+  - id: auth-needs-security-evidence
+    description: Authentication changes require tests and threat-model review.
+    when:
+      changed:
+        - "packages/auth/src/**"
+    require:
+      all:
+        - "packages/auth/test/**"
+        - "docs/security/threat-model.md"
+    severity: error

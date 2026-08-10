@@ -1,0 +1,9 @@
+# Default review owner
+* @Kanipre
+
+# Trust boundary and release surface
+/.github/workflows/ @Kanipre
+/action.yml @Kanipre
+/src/action.ts @Kanipre
+/src/git.ts @Kanipre
+/schema/ @Kanipre

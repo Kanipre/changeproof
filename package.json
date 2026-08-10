@@ -1,0 +1,77 @@
+{
+  "name": "changeproof",
+  "version": "0.1.0",
+  "description": "Declarative evidence gates for pull requests.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Kanipre",
+    "url": "https://github.com/Kanipre"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kanipre/changeproof.git"
+  },
+  "homepage": "https://github.com/Kanipre/changeproof#readme",
+  "bugs": {
+    "url": "https://github.com/Kanipre/changeproof/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "changeproof": "dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "action-dist",
+    "action.yml",
+    "schema",
+    "README.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "scripts": {
+    "build": "npm run build:lib && npm run build:action",
+    "build:lib": "tsc -p tsconfig.build.json",
+    "build:action": "esbuild src/action.ts --bundle --platform=node --target=node20 --format=cjs --outfile=action-dist/index.cjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "check:dogfood": "node dist/cli.js check --file src/evaluate.ts --file test/evaluate.test.ts",
+    "verify": "npm run typecheck && npm run test:coverage && npm run build && npm run check:dogfood",
+    "prepack": "npm run verify"
+  },
+  "dependencies": {
+    "commander": "^14.0.0",
+    "minimatch": "^10.0.3",
+    "picocolors": "^1.1.1",
+    "yaml": "^2.8.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@actions/core": "^3.0.1",
+    "@types/node": "^22.17.1",
+    "@vitest/coverage-v8": "^3.2.4",
+    "esbuild": "^0.28.2",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  },
+  "keywords": [
+    "pull-request",
+    "github-action",
+    "policy-as-code",
+    "maintainers",
+    "ci"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

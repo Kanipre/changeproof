@@ -1,0 +1,33 @@
+name: ChangeProof
+description: Enforce declarative evidence requirements for pull requests.
+author: ChangeProof contributors
+
+inputs:
+  config:
+    description: Path to the ChangeProof configuration file.
+    required: false
+    default: .changeproof.yml
+  base:
+    description: Base Git revision. Detected from the GitHub event when omitted.
+    required: false
+  head:
+    description: Head Git revision. Detected from the GitHub event when omitted.
+    required: false
+
+outputs:
+  passed:
+    description: Whether all error-severity policies passed.
+  errors:
+    description: Number of failed error-severity policies.
+  warnings:
+    description: Number of failed warning-severity policies.
+  changed-files:
+    description: Number of changed files evaluated.
+
+runs:
+  using: node20
+  main: action-dist/index.cjs
+
+branding:
+  icon: shield
+  color: green

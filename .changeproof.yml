@@ -1,0 +1,43 @@
+$schema: ./schema/changeproof.schema.json
+version: 1
+
+policies:
+  - id: source-needs-tests
+    description: Runtime source changes require test evidence.
+    when:
+      changed:
+        - "src/**"
+      ignore:
+        - "src/**/*.test.*"
+    require:
+      any:
+        - "test/**"
+        - "**/*.test.*"
+    severity: error
+    message: Add or update a test that exercises this source change.
+
+  - id: public-api-needs-docs
+    description: Public API changes require user-facing documentation.
+    when:
+      changed:
+        - "src/index.ts"
+        - "src/types.ts"
+    require:
+      any:
+        - "README.md"
+        - "docs/**"
+        - "CHANGELOG.md"
+    severity: error
+    message: Document the public API change in README, docs, or the changelog.
+
+  - id: workflow-needs-maintainer-note
+    description: CI and release workflow changes should be documented.
+    when:
+      changed:
+        - ".github/workflows/**"
+    require:
+      any:
+        - "docs/maintainer-playbook.md"
+        - "CHANGELOG.md"
+    severity: warning
+    message: Explain the workflow change for future maintainers.

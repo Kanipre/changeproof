@@ -1,0 +1,42 @@
+name: Feature proposal
+description: Propose a maintainer workflow ChangeProof does not cover.
+title: "proposal: "
+labels: [enhancement, needs-triage]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Maintainer problem
+      description: Describe the repeated workflow or failure, not only a desired API.
+    validations:
+      required: true
+
+  - type: textarea
+    id: current
+    attributes:
+      label: Current workaround
+      description: How do repositories handle this today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Smallest useful change
+      description: Include an example configuration or command if possible.
+    validations:
+      required: true
+
+  - type: textarea
+    id: adoption
+    attributes:
+      label: Projects that would use it
+      description: Public examples help validate general usefulness.
+
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: Design boundaries
+      options:
+        - label: The proposal can preserve deterministic offline evaluation, or explains why it should be optional.
+          required: true
