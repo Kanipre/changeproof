@@ -6,6 +6,15 @@ All notable changes to this project will be documented here. The format follows
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-08-13
+
+### Changed
+
+- Published the CLI under the verified maintainer scope as
+  `@kanipre/changeproof` after npm rejected the similar unscoped name.
+- Updated the quick start to use the public npm package and documented one-off
+  `npx` usage.
+
 ## [0.1.1] - 2026-08-13
 
 ### Changed
@@ -28,6 +37,7 @@ All notable changes to this project will be documented here. The format follows
 - GitHub Action with event-aware revision discovery and job summaries.
 - Initial maintainer governance, security policy, and contribution workflow.
 
-[Unreleased]: https://github.com/Kanipre/changeproof/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/Kanipre/changeproof/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/Kanipre/changeproof/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/Kanipre/changeproof/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/Kanipre/changeproof/releases/tag/v0.1.0

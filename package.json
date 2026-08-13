@@ -1,6 +1,6 @@
 {
-  "name": "changeproof",
-  "version": "0.1.1",
+  "name": "@kanipre/changeproof",
+  "version": "0.1.2",
   "description": "Declarative evidence gates for pull requests.",
   "type": "module",
   "license": "Apache-2.0",
