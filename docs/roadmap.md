@@ -14,6 +14,7 @@ work.
 
 ## Candidate 0.2 work
 
+- Evaluate Zod 4 under strict schema-v1 compatibility and malformed-input tests
 - `changeproof explain <policy>` for configuration debugging
 - Reusable policy recipe repository based on adopted projects
 - GitLab CI example using the existing CLI

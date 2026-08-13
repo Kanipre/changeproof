@@ -8,6 +8,18 @@ updates:
     groups:
       development-dependencies:
         dependency-type: development
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # Commander 15 requires Node.js 22.12; ChangeProof supports Node.js 20.
+      - dependency-name: commander
+        update-types:
+          - version-update:semver-major
+      # Zod 4 is a trust-boundary migration planned for explicit 0.2 review.
+      - dependency-name: zod
+        update-types:
+          - version-update:semver-major
 
   - package-ecosystem: github-actions
     directory: /

@@ -6,6 +6,17 @@ All notable changes to this project will be documented here. The format follows
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-08-13
+
+### Changed
+
+- Moved the bundled GitHub Action from the Node.js 20 runtime to Node.js 24.
+- Updated SHA-pinned GitHub-maintained actions used by CI and security checks.
+- Limited grouped development dependency updates to minor and patch releases;
+  incompatible production major releases remain explicit maintainer decisions.
+- Replaced the unavailable npm-registry quick start with the installable GitHub
+  Release artifact path.
+
 ## [0.1.0] - 2026-08-10
 
 ### Added
@@ -17,5 +28,6 @@ All notable changes to this project will be documented here. The format follows
 - GitHub Action with event-aware revision discovery and job summaries.
 - Initial maintainer governance, security policy, and contribution workflow.
 
-[Unreleased]: https://github.com/Kanipre/changeproof/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/Kanipre/changeproof/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/Kanipre/changeproof/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/Kanipre/changeproof/releases/tag/v0.1.0
