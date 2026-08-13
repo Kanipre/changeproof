@@ -32,13 +32,20 @@ plausible but omit tests, documentation, release notes, or security review.
 ChangeProof requires Node.js 20 or newer.
 
 ```sh
-npm install --global https://github.com/Kanipre/changeproof/releases/download/v0.1.1/changeproof-0.1.1.tgz
+npm install --global @kanipre/changeproof
 changeproof init
 changeproof check
 ```
 
-This installs the versioned npm-compatible artifact attached to the GitHub
-release. Registry publication is intentionally not claimed until it is live.
+For a one-off run without a global install:
+
+```sh
+npx @kanipre/changeproof init
+npx @kanipre/changeproof check
+```
+
+The package is published publicly on npm. The CLI remains `changeproof` after
+installation.
 
 The generated `.changeproof.yml` starts with one rule: changes under `src/`
 must include a test file.
@@ -99,7 +106,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: Kanipre/changeproof@v0.1.1
+      - uses: Kanipre/changeproof@v0.1.2
 ```
 
 The action publishes a job summary and annotations, then fails only when an

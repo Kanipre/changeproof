@@ -17,4 +17,4 @@ jobs:
           fetch-depth: 0
 
       - name: Require change evidence
-        uses: Kanipre/changeproof@v0.1.1
+        uses: Kanipre/changeproof@v0.1.2
