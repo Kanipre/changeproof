@@ -58,7 +58,7 @@
   "devDependencies": {
     "@actions/core": "^3.0.1",
     "@types/node": "^22.17.1",
-    "@vitest/coverage-v8": "^3.2.4",
+    "@vitest/coverage-v8": "^4.1.11",
     "esbuild": "^0.28.2",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
