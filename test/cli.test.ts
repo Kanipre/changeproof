@@ -10,6 +10,6 @@ describe("CLI metadata", () => {
     const write = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
 
     expect(await run(["node", "changeproof", "--version"])).toBe(0);
-    expect(write).toHaveBeenCalledWith(expect.stringContaining("0.1.2"));
+    expect(write).toHaveBeenCalledWith(expect.stringContaining("0.1.3"));
   });
 });

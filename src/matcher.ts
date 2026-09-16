@@ -9,7 +9,7 @@ const MATCH_OPTIONS = {
 } as const;
 
 export function normalizeRepositoryPath(input: string): string {
-  const value = input.trim().replaceAll("\\", "/");
+  const value = input.replaceAll("\\", "/");
 
   if (
     value.length === 0 ||

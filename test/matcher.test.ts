@@ -41,6 +41,11 @@ describe("repository path matching", () => {
     ]);
   });
 
+  it("preserves filename whitespace instead of conflating distinct Git paths", () => {
+    expect(normalizeChangedFiles([" test/a.ts", "test/a.ts", "test/a.ts "]))
+      .toEqual([" test/a.ts", "test/a.ts", "test/a.ts "]);
+  });
+
   it("rejects unknown change statuses at runtime", () => {
     expect(() =>
       normalizeChanges([

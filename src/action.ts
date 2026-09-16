@@ -1,13 +1,14 @@
 import { readFile } from "node:fs/promises";
 import * as core from "@actions/core";
-import { loadConfig } from "./config.js";
+import { loadConfig, parseConfig } from "./config.js";
 import { evaluate } from "./evaluate.js";
 import { formatMarkdown } from "./format.js";
-import { getChanges } from "./git.js";
+import { getChanges, readFileAtRevision } from "./git.js";
 
 interface EventRange {
   base?: string;
   head?: string;
+  configRef?: string;
 }
 
 async function eventRange(): Promise<EventRange> {
@@ -19,12 +20,15 @@ async function eventRange(): Promise<EventRange> {
     before?: string;
     after?: string;
   };
-  return {
-    base:
-      event.pull_request?.base?.sha ?? event.merge_group?.base_sha ?? event.before,
-    head:
-      event.pull_request?.head?.sha ?? event.merge_group?.head_sha ?? event.after,
-  };
+  if (event.pull_request !== undefined || event.merge_group !== undefined) {
+    const base = event.pull_request?.base?.sha ?? event.merge_group?.base_sha;
+    const head = event.pull_request?.head?.sha ?? event.merge_group?.head_sha;
+    if (typeof base !== "string" || !base || typeof head !== "string" || !head) {
+      throw new Error("Pull request or merge group event is missing base or head commit.");
+    }
+    return { base, head, configRef: base };
+  }
+  return { base: event.before, head: event.after };
 }
 
 export async function runAction(): Promise<void> {
@@ -34,9 +38,10 @@ export async function runAction(): Promise<void> {
     const inputHead = core.getInput("head");
     const base = inputBase || detected.base;
     const head = inputHead || detected.head || "HEAD";
-    const config = await loadConfig(
-      core.getInput("config") || ".changeproof.yml",
-    );
+    const configPath = core.getInput("config") || ".changeproof.yml";
+    const config = detected.configRef === undefined
+      ? await loadConfig(configPath)
+      : parseConfig(readFileAtRevision(detected.configRef, configPath));
     const files = getChanges({
       ...(base === undefined ? {} : { base }),
       head,

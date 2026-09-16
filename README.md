@@ -106,12 +106,25 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: Kanipre/changeproof@v0.1.2
+      - uses: Kanipre/changeproof@v0.1.3
 ```
 
 The action publishes a job summary and annotations, then fails only when an
 `error` policy is missing evidence. Failed `warning` policies remain visible
 without blocking the pull request.
+
+For pull requests and merge queues, configuration is read from the event's
+**base commit**, not the contributor's checkout. A PR cannot weaken its own
+checks by changing `.changeproof.yml`. Merge the initial policy into the base
+branch before enabling a required check; a missing base policy fails the job.
+Policy edits take effect for subsequent PRs after they are merged. The `base`
+and `head` inputs change the diff range, not the trusted configuration revision.
+For push and manual events, the action uses the checked-out configuration.
+
+The action's `config` input must be repository-relative for PR and merge queue
+events. Use a reviewed release or immutable commit SHA for the action itself;
+`uses: ./` executes the checked-out action code and is only suitable for testing
+the action in its own repository. See the [threat model](docs/security/threat-model.md).
 
 ## Requirement semantics
 
@@ -132,6 +145,8 @@ require:
 Patterns use `minimatch` syntax, paths are repository-relative, dotfiles are
 included, and matching is case-sensitive. Negated patterns are intentionally
 unsupported; use `when.ignore` so policy intent stays explicit.
+Leading and trailing filename whitespace is preserved: `CHANGELOG.md ` is a
+different file from `CHANGELOG.md` and cannot satisfy that exact requirement.
 
 Deleted files still activate matching policies, but do not count as evidence.
 Deleting a protected source file can therefore require a test or release note;
@@ -177,6 +192,8 @@ evaluation, Git discovery, and all formatters.
 - [Architecture](ARCHITECTURE.md)
 - [Roadmap](docs/roadmap.md)
 - [Adoption guide](docs/adoption.md)
+- [Reproducible local demo](docs/demo.md)
+- [Threat model](docs/security/threat-model.md)
 - [Support](SUPPORT.md)
 - [Code of Conduct](CODE_OF_CONDUCT.md)
 

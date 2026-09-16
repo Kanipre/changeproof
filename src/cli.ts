@@ -60,7 +60,7 @@ export async function run(argv = process.argv): Promise<number> {
   const program = new Command()
     .name("changeproof")
     .description("Require evidence files when sensitive paths change.")
-    .version("0.1.2")
+    .version("0.1.3")
     .exitOverride();
 
   program

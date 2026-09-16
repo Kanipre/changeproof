@@ -2,6 +2,11 @@
 
 ChangeProof reads `.changeproof.yml` from the current directory by default.
 Use `--config` or the action's `config` input to select another file.
+The CLI uses the local file. For pull requests and merge queues, the action
+reads the repository-relative path from the event's base commit. It fails if
+that committed configuration is missing or invalid, without falling back to
+the contributor's version. The action's diff inputs do not override this trust
+boundary. For other events, the action uses the checked-out file.
 
 ## Top-level fields
 
@@ -34,6 +39,7 @@ both are enforced.
 
 - Paths are normalized to forward slashes and matched from repository root.
 - Matching is case-sensitive on every operating system.
+- Filename whitespace is significant and is not trimmed.
 - Dotfiles such as `.changeset/quiet-rivers.md` are included.
 - Deleted files can activate a policy but never count as evidence. This prevents
   deleting a test or document from satisfying a requirement.

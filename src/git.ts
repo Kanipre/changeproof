@@ -1,6 +1,6 @@
 import { execFileSync } from "node:child_process";
 import type { ExecFileSyncOptionsWithStringEncoding } from "node:child_process";
-import { normalizeChanges } from "./matcher.js";
+import { normalizeChanges, normalizeRepositoryPath } from "./matcher.js";
 import type { ChangedFile, ChangeStatus } from "./types.js";
 
 export interface GitDiffOptions {
@@ -141,4 +141,18 @@ export function getChanges(options: GitDiffOptions = {}): ChangedFile[] {
 
 export function getChangedFiles(options: GitDiffOptions = {}): string[] {
   return getChanges(options).map((change) => change.path);
+}
+
+export function readFileAtRevision(
+  revision: string,
+  filePath: string,
+  cwd = process.cwd(),
+): string {
+  validateRevision(revision, "configuration");
+  const repositoryPath = normalizeRepositoryPath(filePath);
+  const commit = runGit(
+    ["rev-parse", "--verify", "--end-of-options", `${revision}^{commit}`],
+    cwd,
+  ).trim();
+  return runGit(["show", `${commit}:${repositoryPath}`], cwd);
 }
