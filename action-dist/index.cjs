@@ -32643,7 +32643,7 @@ var MATCH_OPTIONS = {
   nonegate: true
 };
 function normalizeRepositoryPath(input) {
-  const value = input.trim().replaceAll("\\", "/");
+  const value = input.replaceAll("\\", "/");
   if (value.length === 0 || value.startsWith("/") || /^[A-Za-z]:\//.test(value) || value.includes("\0") || value.split("/").includes("..")) {
     throw new Error(`Invalid repository-relative path: ${JSON.stringify(input)}`);
   }
@@ -32898,16 +32898,30 @@ function getChanges(options = {}) {
   ).map((path3) => ({ path: path3, status: "added" }));
   return normalizeChanges([...unstaged, ...staged, ...untracked]);
 }
+function readFileAtRevision(revision, filePath, cwd = process.cwd()) {
+  validateRevision(revision, "configuration");
+  const repositoryPath = normalizeRepositoryPath(filePath);
+  const commit = runGit(
+    ["rev-parse", "--verify", "--end-of-options", `${revision}^{commit}`],
+    cwd
+  ).trim();
+  return runGit(["show", `${commit}:${repositoryPath}`], cwd);
+}
 
 // src/action.ts
 async function eventRange() {
   const eventPath = process.env.GITHUB_EVENT_PATH;
   if (eventPath === void 0) return {};
   const event = JSON.parse(await (0, import_promises2.readFile)(eventPath, "utf8"));
-  return {
-    base: event.pull_request?.base?.sha ?? event.merge_group?.base_sha ?? event.before,
-    head: event.pull_request?.head?.sha ?? event.merge_group?.head_sha ?? event.after
-  };
+  if (event.pull_request !== void 0 || event.merge_group !== void 0) {
+    const base = event.pull_request?.base?.sha ?? event.merge_group?.base_sha;
+    const head = event.pull_request?.head?.sha ?? event.merge_group?.head_sha;
+    if (typeof base !== "string" || !base || typeof head !== "string" || !head) {
+      throw new Error("Pull request or merge group event is missing base or head commit.");
+    }
+    return { base, head, configRef: base };
+  }
+  return { base: event.before, head: event.after };
 }
 async function runAction() {
   try {
@@ -32916,9 +32930,8 @@ async function runAction() {
     const inputHead = getInput("head");
     const base = inputBase || detected.base;
     const head = inputHead || detected.head || "HEAD";
-    const config = await loadConfig(
-      getInput("config") || ".changeproof.yml"
-    );
+    const configPath = getInput("config") || ".changeproof.yml";
+    const config = detected.configRef === void 0 ? await loadConfig(configPath) : parseConfig(readFileAtRevision(detected.configRef, configPath));
     const files = getChanges({
       ...base === void 0 ? {} : { base },
       head

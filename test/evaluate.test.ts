@@ -105,4 +105,17 @@ describe("evaluate", () => {
       evidenceFiles: [],
     });
   });
+
+  it("does not treat a different whitespace-suffixed file as exact evidence", () => {
+    const result = evaluate(
+      { version: 1, policies: [config.policies[1]!] },
+      ["src/index.ts", "docs/api.md", "CHANGELOG.md "],
+    );
+
+    expect(result.policies[0]).toMatchObject({
+      status: "failed",
+      missing: ["CHANGELOG.md"],
+    });
+    expect(result.changedFiles).toContain("CHANGELOG.md ");
+  });
 });

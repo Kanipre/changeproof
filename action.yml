@@ -4,7 +4,7 @@ author: ChangeProof contributors
 
 inputs:
   config:
-    description: Path to the ChangeProof configuration file.
+    description: Repository-relative configuration path; read from the event base commit for pull requests and merge groups.
     required: false
     default: .changeproof.yml
   base:

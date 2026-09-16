@@ -93,7 +93,7 @@ export function formatSarif(result: EvaluationResult): string {
         tool: {
           driver: {
             name: "ChangeProof",
-            informationUri: "https://www.npmjs.com/package/changeproof",
+            informationUri: "https://www.npmjs.com/package/@kanipre/changeproof",
             rules: failed.map((policy) => ({
               id: policy.id,
               shortDescription: {
@@ -116,7 +116,10 @@ export function formatSarif(result: EvaluationResult): string {
                   {
                     physicalLocation: {
                       artifactLocation: {
-                        uri: policy.triggeringFiles[0],
+                        uri: policy.triggeringFiles[0]
+                          .split("/")
+                          .map(encodeURIComponent)
+                          .join("/"),
                       },
                       region: { startLine: 1 },
                     },

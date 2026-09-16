@@ -68,6 +68,9 @@ describe("output formats", () => {
     const sarif = JSON.parse(formatSarif(result));
     expect(sarif.version).toBe("2.1.0");
     expect(sarif.runs[0].tool.driver.rules).toHaveLength(2);
+    expect(sarif.runs[0].tool.driver.informationUri).toBe(
+      "https://www.npmjs.com/package/@kanipre/changeproof",
+    );
     expect(sarif.runs[0].results[0]).toMatchObject({
       ruleId: "api-docs",
       level: "error",
@@ -75,5 +78,14 @@ describe("output formats", () => {
     expect(
       sarif.runs[0].results[0].locations[0].physicalLocation.artifactLocation.uri,
     ).toBe("src/index.ts");
+  });
+
+  it("encodes filenames as relative SARIF URIs", () => {
+    const withSpecialPath = structuredClone(result);
+    withSpecialPath.policies[0]!.triggeringFiles = ["src/a b#c?d%e.ts"];
+    const sarif = JSON.parse(formatSarif(withSpecialPath));
+    expect(
+      sarif.runs[0].results[0].locations[0].physicalLocation.artifactLocation.uri,
+    ).toBe("src/a%20b%23c%3Fd%25e.ts");
   });
 });

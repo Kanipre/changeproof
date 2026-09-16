@@ -3,7 +3,7 @@ import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { getChangedFiles, getChanges } from "../src/git.js";
+import { getChangedFiles, getChanges, readFileAtRevision } from "../src/git.js";
 
 const temporaryDirectories: string[] = [];
 
@@ -102,6 +102,26 @@ describe("Git changed file discovery", () => {
     const cwd = await repository();
     expect(() => getChangedFiles({ cwd, base: "missing-ref" })).toThrowError(
       /Git command failed/,
+    );
+  });
+
+  it("reads committed configuration without using working-tree contents", async () => {
+    const cwd = await repository();
+    await writeFile(path.join(cwd, ".changeproof.yml"), "version: 1\n");
+    git(cwd, "add", ".");
+    git(cwd, "commit", "-m", "add trusted configuration");
+    const base = git(cwd, "rev-parse", "HEAD");
+    await writeFile(path.join(cwd, ".changeproof.yml"), "untrusted\n");
+
+    expect(readFileAtRevision(base, ".changeproof.yml", cwd)).toBe("version: 1\n");
+  });
+
+  it("rejects unsafe configuration revisions and paths before reading Git", () => {
+    expect(() => readFileAtRevision("--help", ".changeproof.yml")).toThrowError(
+      /Invalid configuration Git revision/,
+    );
+    expect(() => readFileAtRevision("HEAD", "../outside.yml")).toThrowError(
+      /Invalid repository-relative path/,
     );
   });
 });

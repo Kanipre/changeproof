@@ -20,6 +20,10 @@ before evaluation. Git revisions are constrained before being passed as
 arguments to `execFileSync`; no command is run through a shell. The action uses
 only the checked-out repository and GitHub event payload. It does not fetch
 commits, execute repository code, or transmit source paths.
+For pull requests and merge groups, policy content comes from the event's base
+commit via Git's object database; a contributor's policy edits do not apply to
+their own change. A missing or invalid base policy fails the check. Push and
+manual events retain checked-out configuration behavior.
 
 The GitHub Action is bundled into `action-dist/index.cjs` so downstream users do
 not install dependencies at action runtime. Release review must include the

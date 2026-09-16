@@ -51,14 +51,30 @@ and does not rely on SHA-1's cryptographic security properties.
 4. Run `npm ci`, `npm run verify`, and `npm pack --dry-run` from a clean clone.
 5. Inspect `action-dist/index.cjs`, the package file list, and update
    `THIRD_PARTY_NOTICES.md` when bundled dependencies change.
-6. Tag the reviewed commit as `vX.Y.Z`; the release workflow publishes npm and
-   creates GitHub release notes.
+6. Tag the reviewed commit as `vX.Y.Z`; the release workflow creates a GitHub
+   Release and package artifact. npm publication runs only when the release
+   environment has npm credentials configured; otherwise publication is deferred
+   for the maintainer's authenticated release step.
 7. Verify installation in a new temporary directory and run one passing and one
    failing policy.
 8. Move the floating `v1` tag only for compatible stable releases after 1.0.
 
 Never publish from an uncommitted working tree or bypass a failed required
 check.
+
+## September 2026 maintenance
+
+- Vitest and its V8 coverage provider are upgraded together to 4.1.11, the
+  maintained fix for [GHSA-82fw-gwwq-j7x9](https://github.com/advisories/GHSA-82fw-gwwq-j7x9).
+  The advisory concerns development-server mock handling; ChangeProof uses the
+  command-line runner, and does not expose that server or ship Vitest as a
+  runtime dependency. Updating still removes the vulnerable maintenance tooling.
+- CodeQL init/analyze are updated together to the same reviewed v4.37.9 SHA.
+- TypeScript 7, Node 26 types, and Vitest 5 remain separate compatibility
+  migrations. Keeping Node 20/22/24 checks green takes priority over combining
+  unrelated major upgrades with the security fix.
+- `verify` builds before testing so integration tests execute the freshly
+  generated action, including the trusted-base policy fix.
 
 ## Deprecation
 
